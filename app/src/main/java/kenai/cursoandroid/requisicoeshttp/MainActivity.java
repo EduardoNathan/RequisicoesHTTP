@@ -19,10 +19,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button botaoRecuperar;
     private TextView textoResultado;
+    private Retrofit retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +37,16 @@ public class MainActivity extends AppCompatActivity {
         textoResultado = findViewById(R.id.text_resultado);
 
         botaoRecuperar.setOnClickListener(view -> {
-            MyTask task = new MyTask();
-            String urlApi = "https://blockchain.info/ticker";
-            String urlCep = "https://viacep.com.br/ws/06332130/json/";
-            task.execute(urlCep);
+
+            retrofit = new Retrofit.Builder()
+                    .baseUrl("https://viacep.com.br/ws/06332130/json/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+//            MyTask task = new MyTask();
+//            String urlApi = "https://blockchain.info/ticker";
+//            String urlCep = "https://viacep.com.br/ws/06332130/json/";
+//            task.execute(urlCep);
         });
     }
 
