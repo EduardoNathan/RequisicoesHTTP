@@ -90,16 +90,27 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(resultado);
 
             String logradouro = null;
+            String cep = null;
+            String complemento = null;
+            String bairro = null;
+            String localidade = null;
+            String uf = null;
 
             try {
                 JSONObject jsonObject = new JSONObject(resultado);
+
                 logradouro = jsonObject.getString("logradouro");
+                cep = jsonObject.getString("cep");
+                complemento = jsonObject.getString("complemento");
+                bairro = jsonObject.getString("bairro");
+                localidade = jsonObject.getString("localidade");
+                uf = jsonObject.getString("uf");
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            textoResultado.setText(logradouro);
+            textoResultado.setText(logradouro + " / " + cep + " / " + complemento + " / " + bairro + " / " + localidade + " / " + uf);
         }
     }
 
