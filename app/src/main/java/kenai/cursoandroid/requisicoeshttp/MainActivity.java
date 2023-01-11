@@ -62,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
                     for(int i=0; i<listaPostagens.size(); i ++){
                         Postagem postagem = listaPostagens.get(i);
-                        Log.d("resultado: ", "resultado: " + postagem.getId()
+                        Log.d("resultado: ", "resultado: "
+                                + postagem.getId()
                                 + " / " + postagem.getTitle());
                     }
                 }
@@ -94,6 +95,5 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
     }
 }
