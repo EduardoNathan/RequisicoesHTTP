@@ -19,6 +19,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import kenai.cursoandroid.requisicoeshttp.api.CEPService;
+import kenai.cursoandroid.requisicoeshttp.model.CEP;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -36,18 +41,40 @@ public class MainActivity extends AppCompatActivity {
         botaoRecuperar = findViewById(R.id.button_recuperar);
         textoResultado = findViewById(R.id.text_resultado);
 
+        retrofit = new Retrofit.Builder()
+                .baseUrl("https://viacep.com.br/ws/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
         botaoRecuperar.setOnClickListener(view -> {
-
-            retrofit = new Retrofit.Builder()
-                    .baseUrl("https://viacep.com.br/ws/06332130/json/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
+            recuperarCepRetrofit();
 //            MyTask task = new MyTask();
 //            String urlApi = "https://blockchain.info/ticker";
 //            String urlCep = "https://viacep.com.br/ws/06332130/json/";
 //            task.execute(urlCep);
         });
+    }
+
+    private void recuperarCepRetrofit(){
+
+        CEPService cepService = retrofit.create(CEPService.class);
+        Call<CEP> call = cepService.recuperarCEP();
+
+        call.enqueue(new Callback<CEP>() {
+            @Override
+            public void onResponse(Call<CEP> call, Response<CEP> response) {
+                if(response.isSuccessful()){
+                    CEP cep = response.body();
+                    textoResultado.setText(cep.getCep() + " / " + cep.getBairro() + " / " + cep.getUf());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CEP> call, Throwable t) {
+
+            }
+        });
+
     }
 
     class MyTask extends AsyncTask<String, Void, String>{
