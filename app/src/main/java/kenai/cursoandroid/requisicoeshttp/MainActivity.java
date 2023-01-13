@@ -45,9 +45,39 @@ public class MainActivity extends AppCompatActivity {
 
         botaoRecuperar.setOnClickListener(view -> {
 //            recuperarCepRetrofit();
-              recuperarListaRetrofit();
+              //recuperarListaRetrofit();
+            salvarPostagem();
 
         });
+    }
+
+    private void salvarPostagem(){
+
+        // Configurando objeto
+//        Postagem postagem = new Postagem("1234", "Titulo postagem!", "Corpo postagem");
+
+        // Configurando Retrofit, call e salvar postagem
+        DataService service = retrofit.create(DataService.class);
+        Call<Postagem> call = service.salvarPostagem("1234", "Titulo postagem!", "Corpo postagem");
+
+        call.enqueue(new Callback<Postagem>() {
+            @Override
+            public void onResponse(Call<Postagem> call, Response<Postagem> response) {
+                if(response.isSuccessful()){
+                    Postagem postagemResposta = response.body();
+                    textoResultado.setText(
+                            "Código: " + response.code() +
+                            "id: " + postagemResposta.getId() +
+                            "titulo: " + postagemResposta.getTitle());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Postagem> call, Throwable t) {
+
+            }
+        });
+
     }
 
     private void recuperarListaRetrofit(){
