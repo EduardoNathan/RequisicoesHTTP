@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private Button botaoRecuperar;
     private TextView textoResultado;
     private Retrofit retrofit;
+    private DataService service;
     //private List<Foto> listaFotos = new ArrayList<>();
     private List<Postagem> listaPostagens = new ArrayList<>();
 
@@ -42,13 +43,63 @@ public class MainActivity extends AppCompatActivity {
                 .baseUrl("https://jsonplaceholder.typicode.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+        service = retrofit.create(DataService.class);
 
         botaoRecuperar.setOnClickListener(view -> {
 //            recuperarCepRetrofit();
               //recuperarListaRetrofit();
-            salvarPostagem();
+            //salvarPostagem();
+            //atualizarPostagem();
+            removerPostagem();
 
         });
+    }
+
+    private void removerPostagem(){
+    Call<Void> call = service.removerPostagem(2);
+    call.enqueue(new Callback<Void>() {
+        @Override
+        public void onResponse(Call<Void> call, Response<Void> response) {
+            if(response.isSuccessful()){
+                textoResultado.setText("Status: " + response.code());
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Void> call, Throwable t) {
+
+        }
+    });
+    }
+
+    private void atualizarPostagem(){
+
+        //Postagem postagem = new Postagem("1234", null, "Corpo postagem");
+
+        Postagem postagem = new Postagem();
+        postagem.setBody("Corpo da postagem alterado");
+
+        Call<Postagem> call = service.atualizarPostagem(2, postagem);
+        call.enqueue(new Callback<Postagem>() {
+            @Override
+            public void onResponse(Call<Postagem> call, Response<Postagem> response) {
+                if(response.isSuccessful()){
+                    Postagem postagemResposta = response.body();
+                    textoResultado.setText(
+                            "Status: " + response.code() +
+                                    "id: " + postagemResposta.getId() +
+                                    "userId: " + postagemResposta.getUserId() +
+                                    "body: " + postagemResposta.getBody() +
+                                    "titulo: " + postagemResposta.getTitle());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Postagem> call, Throwable t) {
+
+            }
+        });
+
     }
 
     private void salvarPostagem(){

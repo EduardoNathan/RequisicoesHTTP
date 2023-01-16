@@ -13,6 +13,9 @@ public class Postagem {
         this.body = body;
     }
 
+    public Postagem() {
+    }
+
     public String getUserId() {
         return userId;
     }
